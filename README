@@ -1,0 +1,39 @@
+$ show dbs
+$ show collections
+$ use <databasename>
+$ db.<collectionname>.find().pretty()
+
+node .\index.js
+
+$ npm install react-router
+$ npm install react-router-dom
+$ npm install mongoose --save
+$ npm install cors --save
+
+1> REST request should have action of preprocessing and 
+   postprocessing
+
+2> for JWT we required JSON web token 
+   npm install jsonwebtoken -save
+
+
+Project from scratch
+
+To Start Node
+
+1> node index
+
+To create project 
+
+
+1>
+Create new folder with name of project
+
+2>
+npm init 
+
+3>  
+npm install express --save
+
+4>
+Then create ' index.js ' file in project folder
