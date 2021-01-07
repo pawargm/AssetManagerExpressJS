@@ -40,59 +40,6 @@ exports.createUser = async (req, res, next) => {
     } catch (err) { res.json({message: err})}
 
 }
-
-
-//To gets all asset list
-exports.getAssets = async (req, res, next) => {
-    
-    console.log("getAssets:start")
-    try{
-        const assets = await Asset.find()
-        res.json(assets)
-    } catch (err) {
-        res.json({msg:err})
-    }
-}
-
-//Function to filter data by city, colony & road
-exports.getAssetByAddress = async (req, res, next) => {
-    
-    console.log("getAssetByAddress:start")
-    try{
-        city = req.body.address.city
-        colony = req.body.address.colony
-        road = req.body.address.road
-
-        const assets = await Asset.find(
-            {
-            $or: [
-                {'address.city': { $eq:city}},
-                {'address.colony': {$eq: colony}},
-                {'address.road': {$eq: road}}
-                ]
-            })
-        res.json(assets)
-    } catch (err) {
-        res.json({msg:err})
-    }
-}
-
-//This function gets used by User APIS
-exports.updateAsset = async (req, res, next) => { 
-
-    console.log("updateAsset:start")
-
-    assetObjId = "5fe7064a9700d375c8515331" //this is Object id 
-    Asset.update({"_id":assetObjId},{"area":"1700 sq foot"},
-    
-        function(err,log){
-            console.log("record gets updated "+ log)
-        }
-    )
-    res.json({msg:"Success"})
-}
-
-
 exports.removeAssetFromSellLst = async (req, res, next) => { 
 
     console.log("removeAssetFromSellLst:start")

@@ -21,10 +21,13 @@ mongoose.connect('mongodb://localhost:27017/assetDB', {useNewUrlParser:true}, ()
 
 
 //Asset Test  API
+app.use(require('./mware/auth'))
 app.use('/asset', assetrouter)
 
 //User Test API
+app.use(require('./mware/auth'))
 app.use('/user', userrouter)
 
+app.use('/login', require('./controller/logincontroller'))
 
 app.listen(5001, () => console.log('Server is running'))
