@@ -45,11 +45,13 @@ const UserSchema = mongoose.Schema(
         },
         assetlstsell: {
             type: Array,
-            required: false
+            required: false,
+            unique: true
         },
         assetlstbuy: {
             type: Array,
-            required: false
+            required: false,
+            unique: true
         } 
     }
 )

@@ -48,7 +48,7 @@ exports.removeAssetFromSellLst = async (req, res, next) => {
     console.log("Type of assetid")
     console.log(typeof assetObjId)
   
-    User.update({_id:req.body.userid}, {$pull:{assetlstsell:req.body.assetid}},
+    User.update({"username":req.body.username}, {$pull:{assetlstsell:req.body.assetid}},
         function(err,log){
             console.log("Asset also gets removed from users object" + log + err);
         })
@@ -61,9 +61,10 @@ exports.removeAssetFromBuyLst = async (req, res, next) => {
 
     assetObjId = req.body.assetid//"5fe6e4564089cd6948febfb5" //this is Object id 
     console.log("Type of assetid")
+    console.log(req.body)
     console.log(typeof assetObjId)
   
-    User.update({_id:req.body.userid}, {$pull:{assetlstbuy:req.body.assetid}},
+    User.update({"username":req.body.username}, {$pull:{assetlstbuy:req.body.assetid}},
         function(err,log){
             console.log("Asset also gets removed from users object" + log + err);
         })
@@ -78,9 +79,9 @@ exports.addAssetToBuyLst = async (req, res, next) => {
     console.log("Type of assetid")
     console.log(typeof assetObjId)
   
-    User.update({_id:req.body.userid}, {$push:{assetlstbuy:req.body.assetid}},
+    User.update({"username":req.body.username}, {$push:{assetlstbuy:req.body.assetid}},
         function(err,log){
-            console.log("Asset also gets removed from users object" + log + err);
+            console.log("Asset gets added to BuyList" + log + err);
         })
     res.json({msg:"Success"})
 }
@@ -90,7 +91,7 @@ exports.updateUser = async (req, res, next) => {
 
     console.log("updateUser:start")
     
-    User.update({"_id":req.body.userid},req.body,
+    User.update({"username":req.body.username},req.body,
     
         function(err,log){
             console.log("record gets updated "+ log)
@@ -111,14 +112,52 @@ exports.getUsers = async (req, res, next) => {
     }
 }
 
+//To gets assetbuylst from user
+exports.getBuyLst = async (req, res, next) => {
+    
+    console.log("getBuyLst:start")
+    let userbuyassetdetail = []
+    try{
+        console.log("username")
+        console.log(req.body.username)
+        const assetlstbuyObj = await User.find({"username":req.body.username}, {"assetlstbuy":1, "_id":0})
+        
+        //console.log(assetlstbuyObj)
+        var i
+   
+        for(i = 0; i < assetlstbuyObj[0].assetlstbuy.length; i++) {
+            try{
+                const assetid = assetlstbuyObj[0].assetlstbuy[i]
+                //console.log(assetlstbuyObj[0].assetlstbuy[i])
+                const assetObj = await Asset.find(
+                    {
+                        '_id':assetid
+                    })
+                   // console.log(assetObj)
+                    userbuyassetdetail.push(assetObj[0])
+            } catch (err) {
+                console.log("Inner exception")
+                res.json({msg:err})
+            }           
+        }
+        //console.log(userbuyassetdetail)
+        res.json(userbuyassetdetail)
+    } catch (err) {
+        console.log("Outer exception")
+        console.log(err)
+        res.json({msg:err})
+    }
+}
+
+
 //Function to filter data by userid
 exports.getUserById = async (req, res, next) => {
     
     console.log("getUserById:start")
     try{
-        userid = req.body.userid
+        username = req.body.username
         const user = await User.find(
-            {'_id': { $eq:userid}},
+            {'username': { $eq:username}},
         )
         res.json(user)
     } catch (err) {
@@ -131,12 +170,10 @@ exports.removeUser = async (req, res, next) => {
 
     console.log("removeUser:start")
 
-    userId = req.body.userid//"5fe6e4564089cd6948febfb5" //this is Object id 
-   
-    User.count({"_id":userId},function(err,count){
+    User.count({"username":req.body.username},function(err,count){
         console.log("No Of Records in users Schema:"+count);
         if(count != 0) {
-            User.remove({"_id":userId},
+            User.remove({"username":req.body.username},
                 function(err,log){
                     console.log("record gets updated "+ log)
                 }

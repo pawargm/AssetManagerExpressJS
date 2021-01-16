@@ -51,6 +51,7 @@ exports.getAssets = async (req, res, next) => {
         const assets = await Asset.find()
         res.json(assets)
     } catch (err) {
+        console.log("In exceptions")
         res.json({msg:err})
     }
 }
