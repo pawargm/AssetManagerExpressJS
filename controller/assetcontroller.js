@@ -23,22 +23,28 @@ exports.createAsset = async (req, res, next) => {
             },
             description: req.body.description,
             maindoordirection: req.body.maindoordirection,
-            pitures: req.body.pitures
+            pitures: req.body.pitures,
+            username: req.body.username
         })
+    console.log("AssetObj")
+    console.log(asset)
     try{
         const saveAsset = await asset.save()
         console.log(saveAsset.id)
         console.log(typeof saveAsset.id.valueOf())
         //Save that asset id to owner table
         
-        User.update({_id:req.body.userid}, {$push:{assetlstsell:saveAsset.id.valueOf()}},
+        User.update({username:req.body.username}, {$push:{assetlstsell:saveAsset.id.valueOf()}},
             
             function(err,log){
                 console.log("LOG:"+log);
             }            
             )
         res.json(saveAsset)
-    } catch (err) { res.json({message: err})}
+    } catch (err) { 
+        console.log("Exception")    
+        res.json({message: err})
+    }
 
 }
 

@@ -15,6 +15,10 @@ const AssetSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        username: {
+            type: String,
+            required: true
+        },
         type : {
             type: String,
             required: false
