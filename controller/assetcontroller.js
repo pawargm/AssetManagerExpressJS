@@ -20,6 +20,8 @@ exports.createAsset = async (req, res, next) => {
             price: {
                 value : req.body.price.value,
                 negotiable: req.body.price.negotiable
+
+                
             },
             description: req.body.description,
             maindoordirection: req.body.maindoordirection,

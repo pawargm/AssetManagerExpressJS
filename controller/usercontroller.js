@@ -149,6 +149,48 @@ exports.getBuyLst = async (req, res, next) => {
     }
 }
 
+//To gets assetselllst from user
+exports.getSellLst = async (req, res, next) => {
+    
+    console.log("getSellLst:start")
+    let usersellassetdetail = []
+    try{
+        console.log("username")
+        console.log(req.body.username)
+        const assetlstsellObj = await User.find({"username":req.body.username}, {"assetlstsell":1, "_id":0})
+        
+        //console.log(assetlstbuyObj)
+        var i
+   
+        for(i = 0; i < assetlstsellObj[0].assetlstsell.length; i++) {
+            try{
+                const assetid = assetlstsellObj[0].assetlstsell[i]
+                //console.log(assetlstbuyObj[0].assetlstbuy[i])
+                const assetObj = await Asset.find(
+                    {
+                        '_id':assetid
+                    })
+                   // console.log(assetObj)
+                   if( assetObj[0] != null ) {
+                        //console.log("NOT NULL")
+                        //console.log(assetObj[0])
+                        usersellassetdetail.push(assetObj[0])
+                   }
+            } catch (err) {
+                console.log("Inner exception")
+                res.json({msg:err})
+            }           
+        }
+        //console.log(userbuyassetdetail)
+        res.json(usersellassetdetail)
+    } catch (err) {
+        console.log("Outer exception")
+        console.log(err)
+        res.json({msg:err})
+    }
+}
+
+
 
 //Function to filter data by userid
 exports.getUserById = async (req, res, next) => {
